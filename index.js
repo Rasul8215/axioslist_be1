@@ -35,7 +35,7 @@ app.post("/login", async (req, res) => {
     console.log(newuser);
     const data = await user.findOne({ username: newuser.username });
     if (!data) {
-      return;
+      return res.send("error");
     }
     const match = bcrypt.compareSync(newuser.password, data.password);
     console.log(data);
