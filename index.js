@@ -30,16 +30,18 @@ app.post("/signup", (req, res) => {
   res.json(newuser);
 });
 app.post("/login", async (req, res) => {
-  const newuser = req.body;
-  console.log(newuser);
-  const data = await user.findOne({ username: newuser.username });
-  const match = bcrypt.compareSync(newuser.password, data.password);
-  console.log(data);
-  if (match) {
-    const token = jwt.sign(data.toJSON(), "hello");
-    return res.json(token);
-  } else {
-    res.status(400).send("error");
+  try {
+    const newuser = req.body;
+    console.log(newuser);
+    const data = await user.findOne({ username: newuser.username });
+    const match = bcrypt.compareSync(newuser.password, data.password);
+    console.log(data);
+    if (match) {
+      const token = jwt.sign(data.toJSON(), "hello");
+      return res.json(token);
+    }
+  } catch (err) {
+    res.status(400).send(err);
   }
 });
 app.use((req, res, next) => {
